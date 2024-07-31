@@ -1,7 +1,7 @@
-import subprocess
-from subprocess import run
+import docker
 
-result = run(["ls", "-la"], capture_output=True, text=True)
-print(result.stdout)
-print(result.stderr)
+client = docker.from_env()
 
+# TODO: build docker image using code?
+output = client.containers.run("command-runner")
+print(output.decode('utf-8'))
