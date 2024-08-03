@@ -1,5 +1,7 @@
 import docker
 
+from services.mock_agent import MockAgent
+
 client = docker.from_env()
 
 container = client.containers.run(
@@ -11,12 +13,9 @@ container = client.containers.run(
     working_dir="/usr/src",
 )
 
-commands = [
-    "pipa install nodestream",
-    "nodestream new --database neo4j my_project",
-    "cd my_project",
-    "nodestream run sample -v",
-]
+agent = MockAgent()
+
+commands = agent.fetch_commands("some document text")
 
 chained_commands = ' && '.join(commands)
 
@@ -29,9 +28,15 @@ exit_code, output = container.exec_run(
     stream=True,
 )
 
-# Print the output line by line
+
+output_text = ""
+
 for line in output:
-    print(line.decode('utf-8').strip())
+    line_text = line.decode("utf-8")
+    print(line_text.strip())
+    output_text += line_text
+
+print(agent.analyze_output(output_text))
 
 result = container.exec_run('ls -la')
 print(result.output.decode('utf-8'))
