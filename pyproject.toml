@@ -9,7 +9,21 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 docker = "^7.1.0"
+openai = "^1.38.0"
 
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.2"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "breba_docs"
+]
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
