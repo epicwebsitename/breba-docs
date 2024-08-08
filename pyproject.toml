@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 docker = "^7.1.0"
 openai = "^1.38.0"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.test.dependencies]

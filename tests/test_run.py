@@ -24,7 +24,7 @@ def test_cli(mocker):
     agent.analyze_output = mocker.MagicMock(return_value="Analysis result")
 
     # Call the run function with the mock agent and mock container
-    run(agent, mock_container)
+    run(agent, mock_container, "first run echo 'command1', then run echo 'command2'")
 
     # Check that exec_run was called with the expected chained commands
     chained_commands = "echo 'command1' && echo 'command2'"

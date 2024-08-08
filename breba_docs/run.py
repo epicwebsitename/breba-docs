@@ -1,11 +1,14 @@
 import docker
 
+from breba_docs.services.openai_agent import OpenAIAgent
 from services.mock_agent import MockAgent
+from dotenv import load_dotenv
+from openai import OpenAI
 
 
-def run(agent, container):
+def run(agent, container, doc):
 
-    commands = agent.fetch_commands("some document text")
+    commands = agent.fetch_commands(doc)
 
     chained_commands = ' && '.join(commands)
 
@@ -35,6 +38,7 @@ def run(agent, container):
 
 
 if __name__ == "__main__":
+    load_dotenv()
     client = docker.from_env()
     started_container = client.containers.run(
         "python:3",
@@ -45,5 +49,11 @@ if __name__ == "__main__":
         working_dir="/usr/src",
     )
 
-    run(MockAgent(), started_container)
+    doc_file = "breba_docs/sample_doc.txt"
+
+    with open(doc_file, "r") as file:
+        document = file.read()
+
+    ai_agent = OpenAIAgent()
+    run(ai_agent, started_container, document)
 
