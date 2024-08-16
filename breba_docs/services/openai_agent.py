@@ -40,12 +40,14 @@ class OpenAIAgent:
             messages = self.client.beta.threads.messages.list(
                 thread_id=self.thread.id
             )
+            # TODO: validate that commands are actually commands
             return messages.data[0].content[0].text.value
         else:
             print(run.status)
 
 
     def fetch_commands(self, text):
+        # TODO: Verify that this is even a document file.
         message = "Here is the documentation file. Please provide a comma separated list of commands that can be run in the terminal:\n"
         message += text
         return self.do_run(text, "").split(",")

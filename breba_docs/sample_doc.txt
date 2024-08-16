@@ -21,6 +21,11 @@ _Fast, Declarative ETL for Graph Databases._
 
 ## Getting Started
 
+Clone the repo
+```bash
+    git clone https://github.com/rtyley/small-test-repo.git
+```
+
 Install nodestream with `pip`
 
 ```bash

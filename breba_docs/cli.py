@@ -1,9 +1,22 @@
+import os.path
+
 import docker
+import requests
 
 from breba_docs.services.openai_agent import OpenAIAgent
-from services.mock_agent import MockAgent
 from dotenv import load_dotenv
-from openai import OpenAI
+from  urllib.parse import urlparse
+
+
+def is_valid_url(url):
+    # TODO: check if md file
+    parsed_url = urlparse(url)
+
+    return all([parsed_url.scheme, parsed_url.netloc])
+
+
+def is_file_path(path):
+    return os.path.exists(path)
 
 
 def run(agent, container, doc):
@@ -49,11 +62,24 @@ if __name__ == "__main__":
         working_dir="/usr/src",
     )
 
-    doc_file = "breba_docs/sample_doc.txt"
+    doc_location = input("Provide url to doc file or an absolute path:")
 
-    with open(doc_file, "r") as file:
-        document = file.read()
+    errors = []
+    if is_file_path(doc_location):
+        with open(doc_location, "r") as file:
+            document = file.read()
+    elif is_valid_url(doc_location):
+        response = requests.get(doc_location)
+        # TODO: if response is not md file produce error message
+        document = response.text
+    else:
+        document = None
+        errors += "Not a valid url or local file path"
 
-    ai_agent = OpenAIAgent()
-    run(ai_agent, started_container, document)
-
+    if errors:
+        print(errors)
+    elif document:
+        ai_agent = OpenAIAgent()
+        run(ai_agent, started_container, document)
+    else:
+        print("Document text is empty, but no errors were found")
