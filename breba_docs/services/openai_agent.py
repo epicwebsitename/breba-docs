@@ -4,13 +4,22 @@ from openai import OpenAI
 class OpenAIAgent:
     INSTRUCTIONS = """
     You are assisting a software program to validate contents of a document.  Here are important instructions:
-    0) Never return markdown. You will either return text without special formatting
+    0) Never return markdown. You will return text without special formatting
     1) The user is usually expecting a list of commands that will be run in  the terminal sequentially. Return a comma separated list only.
-    2) The user may present you with output in that case you will answer with either, "ERROR" if the response contains an 
-    error, "PASS" if the response is valid, or "UNKNOWN" if it is not clear whether the output is correct.
+    2) The user may present you with output in that case you will answer questions pertaining to the output from the commands.
     3) When reading the document, you will only use terminal commands in the document exactly as they are written 
     in the document even if there are typos or errors.
     """
+
+    INSTRUCTIONS_OUTPUT = """
+        You are assisting a software program to validate contents of a document. After running commands from the
+        documentation, the user received some output and needs help understanding the output. 
+        Here are important instructions:
+        0) Never return markdown. You will return text without special formatting
+        1) The user will present you with output of the commands that were just run. You will answer with one word 
+        "FAIL", "PASS", "UNKNOWN" followed by a comma and a single sentence summary of why you think the commands ran
+         successfully or otherwise.
+        """
 
     def __init__(self):
         self.client = OpenAI()
@@ -45,14 +54,17 @@ class OpenAIAgent:
         else:
             print(run.status)
 
-
     def fetch_commands(self, text):
         # TODO: Verify that this is even a document file.
-        message = "Here is the documentation file. Please provide a comma separated list of commands that can be run in the terminal:\n"
+        message = ("Here is the documentation file. Please provide a comma separated list of commands that can be run "
+                   "in the terminal:\n")
         message += text
         return self.do_run(text, "").split(",")
 
-
     def analyze_output(self, text):
-        return ("Found some errors. Looks like cd my_project is failing to execute with the following error: cd "
-                "command not found")
+        message = "Here is the output after running the commands. What is your conclusion? \n"
+        message += text
+        return self.do_run(text, OpenAIAgent.INSTRUCTIONS_OUTPUT).split(",")
+
+    def close(self):
+        self.client.beta.assistants.delete(self.assistant.id)

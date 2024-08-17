@@ -1,5 +1,3 @@
-import pytest
-
 from breba_docs.cli import run
 from breba_docs.services.mock_agent import MockAgent
 
