@@ -1,4 +1,4 @@
-import os.path
+from pathlib import Path
 
 import docker
 import requests
@@ -16,8 +16,9 @@ def is_valid_url(url):
     return all([parsed_url.scheme, parsed_url.netloc])
 
 
-def is_file_path(path):
-    return os.path.exists(path)
+def is_file_path(file_path):
+    path = Path(file_path)
+    return path.is_file()
 
 
 def run():
@@ -44,12 +45,17 @@ def run():
         document = response.text
     else:
         document = None
-        errors += "Not a valid url or local file path"
+        errors.append("Not a valid url or local file path")
 
     if errors:
-        print(errors)
+        for error in errors:
+            print(error)
     elif document:
         ai_agent = OpenAIAgent()
         analyze(ai_agent, started_container, document)
     else:
         print("Document text is empty, but no errors were found")
+
+
+if __name__ == "__main__":
+    run()
