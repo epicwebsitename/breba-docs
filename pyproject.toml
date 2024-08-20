@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "breba-docs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Documentation assistant will proof read your docs"
 authors = ["Yason Khaburzaniya <yason@hey.com>"]
 license = "MIT"
@@ -39,6 +39,7 @@ priority = "primary"
 pythonpath = [
   "breba_docs"
 ]
+
 
 
 [tool.poetry.group.dev.dependencies]
