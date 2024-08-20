@@ -6,6 +6,16 @@ authors = ["Yason Khaburzaniya <yason@hey.com>"]
 license = "MIT"
 readme = "README.md"
 
+homepage = "https://github.com/breba-apps/breba-docs"
+repository = "https://github.com/breba-apps/breba-docs"
+documentation = "https://github.com/breba-apps/breba-docs"
+keywords = ["gpt", "assistant", "documentation"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -17,6 +27,13 @@ requests = "^2.32.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.2"
+
+
+
+[[tool.poetry.source]]
+name = "testpypi"
+url = "https://test.pypi.org/legacy/"
+priority = "primary"
 
 [tool.pytest.ini_options]
 pythonpath = [

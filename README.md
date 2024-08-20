@@ -9,13 +9,18 @@ to make sure that it is possible to follow the documentation.
 ## Prerequisites
 Install poetry and git
 
+Get OpenAI API Key and set environment variable like this:
+```bash
+export OPENAI_API_KEY=[your_open_ai_api_key]
+```
+
 ## Getting Started
 
+To install breba-docs, run the following commands:
+
 ```bash
-git clone https://github.com/breba-apps/breba-docs.git
-cd breba-docs
-poetry install
-poetry run breba_docs
+pip install breba-docs
+breba_docs
 ```
 
 Then you will need to provide location of a documentation file. 
