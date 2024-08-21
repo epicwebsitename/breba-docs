@@ -8,6 +8,8 @@ def analyze(agent: OpenAIAgent, container: Container, doc: str):
 
     chained_commands = ' && '.join(commands)
 
+    print(f"Will run the following commands: {chained_commands}\n")
+
     # Execute a command in the container with real-time output
     exit_code, output = container.exec_run(
         f'/bin/bash -c "{chained_commands}"',

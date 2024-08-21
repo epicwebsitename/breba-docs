@@ -2,12 +2,15 @@ from openai import OpenAI
 
 
 class OpenAIAgent:
-    INSTRUCTIONS = """
+    INSTRUCTIONS_GENERAL = """
+        You are assisting a software program to validate contents of a document.
+        """
+
+    INSTRUCTIONS_INPUT = """
     You are assisting a software program to validate contents of a document.  Here are important instructions:
     0) Never return markdown. You will return text without special formatting
     1) The user is usually expecting a list of commands that will be run in  the terminal sequentially. Return a comma separated list only.
-    2) The user may present you with output in that case you will answer questions pertaining to the output from the commands.
-    3) When reading the document, you will only use terminal commands in the document exactly as they are written 
+    2) When reading the document, you will only use terminal commands in the document exactly as they are written 
     in the document even if there are typos or errors.
     """
 
@@ -16,9 +19,10 @@ class OpenAIAgent:
         documentation, the user received some output and needs help understanding the output. 
         Here are important instructions:
         0) Never return markdown. You will return text without special formatting
-        1) The user will present you with output of the commands that were just run. You will answer with one word 
-        "FAIL", "PASS", "UNKNOWN" followed by a comma and a single sentence summary of why you think the commands ran
-         successfully or otherwise.
+        1) The user will present you with output of the commands that were just run. You will answer with 
+        comma-separated values. The first value will be "FAIL", "PASS", or "UNKNOWN". The second value is a single 
+        sentence providing reasons for why. 
+        2) The second value, which is the reason, must not contain commas
         """
 
     def __init__(self):
@@ -26,7 +30,7 @@ class OpenAIAgent:
 
         self.assistant = self.client.beta.assistants.create(
             name="Breba Docs",
-            instructions=OpenAIAgent.INSTRUCTIONS,
+            instructions=OpenAIAgent.INSTRUCTIONS_GENERAL,
             model="gpt-4o-mini"
         )
 
@@ -49,22 +53,23 @@ class OpenAIAgent:
             messages = self.client.beta.threads.messages.list(
                 thread_id=self.thread.id
             )
-            # TODO: validate that commands are actually commands
+
             return messages.data[0].content[0].text.value
         else:
             print(run.status)
 
     def fetch_commands(self, text):
         # TODO: Verify that this is even a document file.
+        # TODO: validate that commands are actually commands
         message = ("Here is the documentation file. Please provide a comma separated list of commands that can be run "
                    "in the terminal:\n")
         message += text
-        return self.do_run(text, "").split(",")
+        return self.do_run(text, OpenAIAgent.INSTRUCTIONS_INPUT).split(",")  # "a, b".split(",") -> ["a", " b"]
 
     def analyze_output(self, text):
         message = "Here is the output after running the commands. What is your conclusion? \n"
         message += text
-        return self.do_run(text, OpenAIAgent.INSTRUCTIONS_OUTPUT).split(",")
+        return self.do_run(text, OpenAIAgent.INSTRUCTIONS_OUTPUT)
 
     def close(self):
         self.client.beta.assistants.delete(self.assistant.id)
