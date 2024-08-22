@@ -64,7 +64,8 @@ class OpenAIAgent:
         message = ("Here is the documentation file. Please provide a comma separated list of commands that can be run "
                    "in the terminal:\n")
         message += text
-        return self.do_run(text, OpenAIAgent.INSTRUCTIONS_INPUT).split(",")  # "a, b".split(",") -> ["a", " b"]
+        assistant_output = self.do_run(text, OpenAIAgent.INSTRUCTIONS_INPUT)
+        return [cmd.strip() for cmd in assistant_output.split(",")]
 
     def analyze_output(self, text):
         message = "Here is the output after running the commands. What is your conclusion? \n"
