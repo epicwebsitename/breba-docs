@@ -7,7 +7,7 @@ Scans your documentation file and executes commands in the documentation
 to make sure that it is possible to follow the documentation.
 
 ## Prerequisites
-Install poetry and git
+Docker engine needs to be installed and running. Use docker installation instructions for your system.
 
 Get OpenAI API Key and set environment variable like this:
 ```bash
