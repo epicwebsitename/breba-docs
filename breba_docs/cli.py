@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 DEFAULT_LOCATION = ("https://gist.githubusercontent.com/yasonk/16990780a6b6e46163d1caf743f38e8f/raw"
                     "/6d5fbb7e7053642f45cb449ace1adb4eea38e6de/gistfile1.txt")
 
+
 def is_valid_url(url):
     # TODO: check if md file
     parsed_url = urlparse(url)
@@ -36,7 +37,6 @@ def run():
     )
 
     doc_location = input("Provide url to doc file or an absolute path:") or DEFAULT_LOCATION
-
 
     errors = []
     if is_file_path(doc_location):

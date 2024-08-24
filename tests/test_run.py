@@ -1,3 +1,4 @@
+from breba_docs.analyzer.service import analyze
 from breba_docs.cli import run
 from breba_docs.services.mock_agent import MockAgent
 
@@ -22,12 +23,13 @@ def test_cli(mocker):
     agent.analyze_output = mocker.MagicMock(return_value="Analysis result")
 
     # Call the run function with the mock agent and mock container
-    run(agent, mock_container, "first run echo 'command1', then run echo 'command2'")
+    analyze(agent, mock_container, "first run echo 'command1', then run echo 'command2'")
 
     # Check that exec_run was called with the expected chained commands
     chained_commands = "echo 'command1' && echo 'command2'"
     mock_container.exec_run.assert_any_call(
-        f'/bin/bash -c "{chained_commands}"',
+        """/bin/bash -c 'echo '"'"'echo '"'"'command1'"'"''"'"' && echo '"'"'command1'"'"' && echo '"'"'echo \
+'"'"'command2'"'"''"'"' && echo '"'"'command2'"'"''""",
         stdout=True,
         stderr=True,
         tty=True,

@@ -39,6 +39,8 @@ priority = "primary"
 pythonpath = [
   "breba_docs"
 ]
+# log_cli = "True"
+# log_cli_level = "INFO"
 
 
 
