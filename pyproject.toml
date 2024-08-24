@@ -17,6 +17,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+packages = [ { include = "breba_docs" } ]
+
 [tool.poetry.dependencies]
 python = "^3.10"
 docker = "^7.1.0"
@@ -29,15 +31,13 @@ requests = "^2.32.3"
 pytest = "^8.3.2"
 
 
-
-[[tool.poetry.source]]
-name = "testpypi"
-url = "https://test.pypi.org/legacy/"
-priority = "primary"
-
 [tool.pytest.ini_options]
 pythonpath = [
   "breba_docs"
+]
+
+markers = [
+    "integration: marks the test as an integration test (deselect with '-m \"not integration\"')",
 ]
 # log_cli = "True"
 # log_cli_level = "INFO"
