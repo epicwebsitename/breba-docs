@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 docker = "^7.1.0"
 openai = "^1.38.0"
 python-dotenv = "^1.0.1"
