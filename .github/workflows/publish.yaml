@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Publish Package to PyPI
+    runs-on: ubuntu-latest
+
+    # See here: https://docs.pypi.org/trusted-publishers/using-a-publisher/
+    # Also here: https://browniebroke.com/blog/attest-build-provenance-for-a-python-package-in-github-actions/
+    # Also here: https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds
+    permissions:
+      id-token: write
+      attestations: write
+
+    # Per instructions here: https://github.com/marketplace/actions/pypi-publish
+    # See here: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+    environment:
+      name: publishing
+      url: https://pypi.org/p/nodestream/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: 'poetry'
+
+      # Poetry build will create the dist folder.
+      # See: https://python-poetry.org/docs/cli/#build
+      - name: Build Package
+        run: poetry build
+
+      # Creates attestation for the GitHub Release. To verify would need to use gh cli, cosign and/or slsa verifier
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'dist/*'
+
+      # - https://github.com/marketplace/actions/pypi-publish
+      # - https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      # https://github.com/actions/upload-artifact
+      - name: Store the Built Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distribution
+          path: dist/
+
