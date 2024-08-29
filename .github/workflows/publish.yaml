@@ -21,7 +21,7 @@ jobs:
     # See here: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
     environment:
       name: publishing
-      url: https://pypi.org/p/nodestream/
+      url: https://pypi.org/p/breba-docs/
 
     steps:
       - uses: actions/checkout@v4
