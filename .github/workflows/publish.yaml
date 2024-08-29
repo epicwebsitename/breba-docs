@@ -15,7 +15,6 @@ jobs:
     permissions:
       id-token: write
       attestations: write
-      contents: write
 
     # Per instructions here: https://github.com/marketplace/actions/pypi-publish
     # See here: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
@@ -34,17 +33,6 @@ jobs:
         with:
           python-version: 3.12
           cache: 'poetry'
-
-      - name: Bump Version
-        run: poetry version ${{ github.event.release.tag_name }}
-
-      # https://github.com/actions/checkout?tab=readme-ov-file#push-a-commit-using-the-built-in-token
-      - name: Commit New Version
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "Bump version to ${{ github.event.release.tag_name }}"
-          git push origin HEAD:main
 
       # Poetry build will create the dist folder.
       # See: https://python-poetry.org/docs/cli/#build

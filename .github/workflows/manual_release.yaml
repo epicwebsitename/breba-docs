@@ -1,0 +1,68 @@
+name: Manual Release Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Type of version bump (major, minor, patch)'
+        required: true
+        default: 'patch'
+
+jobs:
+  release:
+    name: Release Package and Publish to PyPI
+    runs-on: ubuntu-latest
+
+    # See here: https://docs.pypi.org/trusted-publishers/using-a-publisher/
+    # Also here: https://browniebroke.com/blog/attest-build-provenance-for-a-python-package-in-github-actions/
+    # Also here: https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds
+    permissions:
+      contents: write
+
+    # Per instructions here: https://github.com/marketplace/actions/pypi-publish
+    # See here: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+    environment:
+      name: publishing
+      url: https://pypi.org/p/breba-docs/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: 'poetry'
+
+      - name: Bump Version
+        run: poetry version ${{ github.event.inputs.version_bump }}
+
+      # https://github.com/actions/checkout?tab=readme-ov-file#push-a-commit-using-the-built-in-token
+      - name: Commit New Version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bump version to $(poetry version --short)"
+          git push origin HEAD:main
+
+      - name: Create and push tag
+        id: create_and_push_tag
+        run: |
+          VERSION=$(poetry version --short)
+          git tag $VERSION
+          git push origin $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "${{ steps.create_and_push_tag.outputs.VERSION }}"
+          releaseName: "Release ${{ steps.create_and_push_tag.outputs.VERSION }}"
+          body: "Release of version ${{ steps.create_and_push_tag.outputs.VERSION }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
