@@ -62,7 +62,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: "${{ steps.create_and_push_tag.outputs.VERSION }}"
-          releaseName: "Release ${{ steps.create_and_push_tag.outputs.VERSION }}"
           body: "Release of version ${{ steps.create_and_push_tag.outputs.VERSION }}"
           draft: false
           prerelease: false
