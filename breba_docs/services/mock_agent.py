@@ -1,5 +1,8 @@
-class MockAgent:
-    def fetch_commands(self, text):
+from breba_docs.services.agent import Agent
+
+
+class MockAgent(Agent):
+    def fetch_commands(self, text: str) -> list[str]:
         return [
             "pip install nodestream",
             "nodestream new --database neo4j my_project",
@@ -7,6 +10,6 @@ class MockAgent:
             "nodestream run sample -v",
         ]
 
-    def analyze_output(self, text):
+    def analyze_output(self, text: str) -> str:
         return ("Found some errors. Looks like cd my_project is failing to execute with the following error: cd "
                 "command not found")

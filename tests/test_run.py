@@ -1,5 +1,4 @@
 from breba_docs.analyzer.service import analyze
-from breba_docs.cli import run
 from breba_docs.services.mock_agent import MockAgent
 
 

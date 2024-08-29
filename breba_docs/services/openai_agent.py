@@ -1,7 +1,9 @@
 from openai import OpenAI
 
+from breba_docs.services.agent import Agent
 
-class OpenAIAgent:
+
+class OpenAIAgent(Agent):
     INSTRUCTIONS_GENERAL = """
         You are assisting a software program to validate contents of a document.
         """
@@ -58,7 +60,7 @@ class OpenAIAgent:
         else:
             print(run.status)
 
-    def fetch_commands(self, text):
+    def fetch_commands(self, text: str) -> list[str]:
         # TODO: Verify that this is even a document file.
         # TODO: validate that commands are actually commands
         message = ("Here is the documentation file. Please provide a comma separated list of commands that can be run "
@@ -67,7 +69,7 @@ class OpenAIAgent:
         assistant_output = self.do_run(text, OpenAIAgent.INSTRUCTIONS_INPUT)
         return [cmd.strip() for cmd in assistant_output.split(",")]
 
-    def analyze_output(self, text):
+    def analyze_output(self, text: str) -> str:
         message = "Here is the output after running the commands. What is your conclusion? \n"
         message += text
         return self.do_run(text, OpenAIAgent.INSTRUCTIONS_OUTPUT)

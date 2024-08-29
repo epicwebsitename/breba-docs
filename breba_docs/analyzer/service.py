@@ -1,6 +1,6 @@
 import shlex
 
-from breba_docs.services.openai_agent import OpenAIAgent
+from breba_docs.services.agent import Agent
 from docker.models.containers import Container
 
 
@@ -43,7 +43,7 @@ def execute_commands_chained(commands, container):
     return output_text
 
 
-def analyze(agent: OpenAIAgent, container: Container, doc: str):
+def analyze(agent: Agent, container: Container, doc: str):
     commands = agent.fetch_commands(doc)
     output_text = execute_commands_chained(commands, container)
     print(agent.analyze_output(output_text))
@@ -56,7 +56,7 @@ def analyze(agent: OpenAIAgent, container: Container, doc: str):
 
 
 # keep this here for now
-def analyze2(agent: OpenAIAgent, container: Container, doc: str):
+def analyze2(agent: Agent, container: Container, doc: str):
     commands = agent.fetch_commands(doc)
     output_text = ""
     for command in commands:
