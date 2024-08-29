@@ -65,6 +65,7 @@ jobs:
           body: "Release of version ${{ steps.create_and_push_tag.outputs.VERSION }}"
           draft: false
           prerelease: false
+          makeLatest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
