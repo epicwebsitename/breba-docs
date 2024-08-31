@@ -79,6 +79,7 @@ jobs:
         with:
           subject-path: 'dist/*'
 
+      # Uses the default dist/ folder to publish package
       # - https://github.com/marketplace/actions/pypi-publish
       # - https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
       - name: Publish package distributions to PyPI
