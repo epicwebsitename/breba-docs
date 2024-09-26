@@ -12,8 +12,8 @@ to make sure that it is possible to follow the documentation.
 Docker engine needs to be installed and running. Use docker installation instructions for your system.
 
 Get OpenAI API Key and set environment variable like this:
-```bash
-export OPENAI_API_KEY=[your_open_ai_api_key]
+```console
+$ export OPENAI_API_KEY=[your_open_ai_api_key]
 ```
 
 ## Getting Started
@@ -21,8 +21,8 @@ export OPENAI_API_KEY=[your_open_ai_api_key]
 To install breba-docs, run the following commands:
 
 ```bash
-pip install breba-docs
-breba_docs
+$ pip install breba-docs
+$ breba_docs
 ```
 
 Then you will need to provide location of a documentation file. 
